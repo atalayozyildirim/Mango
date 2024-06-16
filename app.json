@@ -21,6 +21,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#f0f4f9"
       },
+      "googleServicesFile": "./config/googleClient.json",
       "package": "com.atalayoz.Mango"
     },
     "web": {
