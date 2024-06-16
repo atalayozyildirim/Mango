@@ -1,0 +1,122 @@
+type Account {
+  provider: String
+  providerAccountId: String
+  refreshToken: String
+  expires_at: String
+  accessToken: String
+  token_type: String
+  refresh_token: String
+  access_token: String
+  scope: String
+  id_token: String
+  session_state: String
+}
+type Session {
+  id: ID
+  expires: String
+  sessionToken: String
+  user: User
+}
+type User {
+  id: ID
+  name: String
+  email: String
+  emailVerified: String
+  image: String
+  accounts: [Account]
+  sessions: [Session]
+}
+
+type VerificationToken {
+  id: ID
+  identifier: String
+  token: String
+  expires: String
+}
+
+type Badges {
+  id: ID!
+  name: String!
+  description: String
+  image: String!
+  UserPoints: Account
+}
+type Post {
+  id: ID!
+  title: String!
+  content: String!
+  AuthorID: String!
+  uri: String
+  video: [String]
+  image: [String]
+  date: String!
+  author: User
+  likes: [Like]
+  page: Int
+  limit: Int
+  comments: [Comment]
+}
+type Comment {
+  id: ID!
+  content: String!
+  date: String!
+  author: Account
+}
+type VerificationRequest {
+  id: ID!
+}
+
+type Like {
+  id: ID!
+  user: [Account]
+  post: Post
+}
+
+type Mutation {
+  addUser(name: String!, email: String!): User
+  updateUser(id: ID!, name: String, email: String): User
+  deleteUser(id: ID!): User
+
+  addPost(
+    title: String!
+    content: String!
+    video: String
+    uri: String
+    image: String
+    date: String
+  ): Post
+  updatePost(id: ID!, title: String, content: String): Post
+  deletePost(id: ID!): Post
+  paginatePosts(page: Int!, limit: Int!): [Post]
+
+  addComment(content: String!, postId: ID!): Comment
+  updateComment(id: ID!, content: String): Comment
+  deleteComment(id: ID!): Comment
+
+  addBadge(name: String!): Badges
+  updateBadge(id: ID!, name: String): Badges
+  deleteBadge(id: ID!): Badges
+
+  addVerificationRequest(userId: ID!): VerificationRequest
+  deleteVerificationRequest(id: ID!): VerificationRequest
+
+  addLike(userId: ID!, postId: ID!): Like
+}
+
+type Query {
+  post(id: ID!): Post
+  comment(id: ID!): Comment
+  badge(id: ID!): Badges
+  like(id: ID!): Like
+  user(id: ID!): User
+  paginatePosts(page: Int!, limit: Int!): [Post]
+  popularPosts: [Post]
+  users: [User]
+  posts: [Post]
+  comments: [Comment]
+  badges: [Badges]
+}
+
+type Subscription {
+  newPost: Post!
+}
