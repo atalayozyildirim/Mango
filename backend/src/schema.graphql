@@ -75,7 +75,6 @@ type Like {
 type Mutation {
   Login(email: String!, password: String!): User
   Register(name: String!, email: String!, password: String!): User
-  addUser(name: String!, email: String!): User
   updateUser(id: ID!, name: String, email: String): User
   deleteUser(id: ID!): User
 
@@ -110,10 +109,10 @@ type Query {
   comment(id: ID!): Comment
   badge(id: ID!): Badges
   like(id: ID!): Like
-  user(id: ID!): User
+  users(id: ID!): User
   paginatePosts(page: Int!, limit: Int!): [Post]
   popularPosts: [Post]
-  users: [User]
+  user: User
   posts: [Post]
   comments: [Comment]
   badges: [Badges]

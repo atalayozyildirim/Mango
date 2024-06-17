@@ -9,7 +9,6 @@ const router = express.Router();
 
 router.get("/token", (req, res) => {
   if (req.user) {
-    console.log(req.user);
     res.json({ user: req.user });
   }
   res.status(401).json({ message: "Unauthorized" });
@@ -61,6 +60,12 @@ router.post("/register", async (req, res, next) => {
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
+});
+
+router.get("/google", passport.authenticate("google", { scope: ["profile"] }));
+router.get("/google/callback", passport.authenticate("google"), (req, res) => {
+  const token = jwt.sign({ userId: req.user.id }, process.env.SECRET);
+  res.redirect("/callback?token=" + token);
 });
 
 export default router;

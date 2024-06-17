@@ -12,12 +12,11 @@ import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHt
 import { readFileSync } from "fs";
 import { connection } from "./db/connection.js";
 import session from "express-session";
-import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 import connectMongodbSession from "connect-mongodb-session";
 import router from "./router/index.js";
 import "./auth/auth.js";
-
+import helmet from "helmet";
 configDotenv();
 
 const PORT = process.env.PORT || 3000;
@@ -58,15 +57,12 @@ const server = new ApolloServer({
     typeDefs,
     resolvers,
   }),
-  context: ({ req, res }) => ({
-    req,
-    res,
-    session: req.session,
-  }),
+  context: ({ req, res }) => ({ req }),
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
 
 app.use(cors());
+// app.use(helmet());
 app.use(cookieParser());
 app.use(express.json());
 
@@ -83,22 +79,8 @@ app.use(passport.session());
 //   }
 // });
 
-app.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["profile"] })
-);
-app.get(
-  "/auth/google/callback",
-  passport.authenticate("google"),
-  (req, res) => {
-    const token = jwt.sign({ userId: req.user.id }, process.env.SECRET);
-    res.redirect("/callback?token=" + token);
-  }
-);
-
 app.use("/", router);
 // app.use("/api", passport.authenticate("google", { session: true }));
-
 await server.start();
 
 app.use(
@@ -107,7 +89,8 @@ app.use(
   express.json(),
   expressMiddleware(server, {
     context: async ({ req }) => ({
-      token: req,
+      token: req.headers.authorization || null,
+      user: req.user,
     }),
   })
 );
