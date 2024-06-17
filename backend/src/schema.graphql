@@ -73,6 +73,8 @@ type Like {
 }
 
 type Mutation {
+  Login(email: String!, password: String!): User
+  Register(name: String!, email: String!, password: String!): User
   addUser(name: String!, email: String!): User
   updateUser(id: ID!, name: String, email: String): User
   deleteUser(id: ID!): User

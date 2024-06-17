@@ -13,6 +13,9 @@ import { readFileSync } from "fs";
 import { connection } from "./db/connection.js";
 import session from "express-session";
 import jwt from "jsonwebtoken";
+import cookieParser from "cookie-parser";
+import connectMongodbSession from "connect-mongodb-session";
+import router from "./router/index.js";
 import "./auth/auth.js";
 
 configDotenv();
@@ -21,9 +24,28 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 
+connection();
+
+const MongoDbSotre = connectMongodbSession(session);
+
 const httpServer = http.createServer(app);
 
-connection();
+const Store = new MongoDbSotre({
+  uri: "mongodb://localhost:5050/Mango",
+  collection: "session",
+});
+
+app.use(
+  session({
+    secret: process.env.SECRET,
+    cookie: {
+      maxAge: 1000 * 60 * 100,
+    },
+    store: Store,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 const typeDefs = gql(
   readFileSync("./src/schema.graphql", {
@@ -36,22 +58,17 @@ const server = new ApolloServer({
     typeDefs,
     resolvers,
   }),
-  context: ({ req }) => {
-    return { user: req.user };
-  },
+  context: ({ req, res }) => ({
+    req,
+    res,
+    session: req.session,
+  }),
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
 
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
-
-app.use(
-  session({
-    secret: process.env.SECRET,
-    resave: false,
-    saveUninitialized: false,
-  })
-);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -79,6 +96,7 @@ app.get(
   }
 );
 
+app.use("/", router);
 // app.use("/api", passport.authenticate("google", { session: true }));
 
 await server.start();

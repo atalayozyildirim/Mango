@@ -44,7 +44,6 @@ const UserSchema = new mongoose.Schema({
   },
   googleId: {
     type: String,
-    unique: true,
   },
   Account: {
     type: mongoose.Schema.Types.ObjectId,
@@ -55,12 +54,17 @@ const UserSchema = new mongoose.Schema({
   expires_in: Number,
 });
 
-UserSchema.plugin(passportLocalMongoose);
-const UserModel = mongoose.model("User", UserSchema);
-UserSchema.pre("save", async (next) => {
+// UserSchema.plugin(passportLocalMongoose);
+UserSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     this.password = await bcrypt.hash(this.password, 10);
   }
   next();
 });
+
+UserSchema.methods.validPassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
+const UserModel = mongoose.model("User", UserSchema);
+
 export default UserModel;

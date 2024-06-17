@@ -1,5 +1,6 @@
 import passport from "passport";
 import { OAuth2Strategy as GoogleStrategy } from "passport-google-oauth";
+import { Strategy as LocalStrategy } from "passport-local";
 import UserModel from "../db/Model/UserModel.js";
 
 passport.use(
@@ -30,6 +31,26 @@ passport.use(
         }
       } catch (err) {
         console.log(err);
+        done(err);
+      }
+    }
+  )
+);
+
+passport.use(
+  new LocalStrategy(
+    { usernameField: "email" },
+    async (email, password, done) => {
+      try {
+        const user = await UserModel.findOne({ email });
+        if (!user) return done(null, false, { message: "Incorrect email" });
+
+        const isMatch = await user.validPassword(password);
+        if (!isMatch)
+          return done(null, false, { message: "Incorrect password." });
+
+        return done(null, user);
+      } catch (err) {
         done(err);
       }
     }
