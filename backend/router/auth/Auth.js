@@ -63,6 +63,7 @@ router.post("/register", async (req, res, next) => {
 });
 
 router.get("/google", passport.authenticate("google", { scope: ["profile"] }));
+
 router.get("/google/callback", passport.authenticate("google"), (req, res) => {
   const token = jwt.sign({ userId: req.user.id }, process.env.SECRET);
   res.redirect("/callback?token=" + token);

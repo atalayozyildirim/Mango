@@ -1,7 +1,7 @@
 import User from "../../db/Model/UserModel.js";
 import { GraphQLError } from "graphql";
 import { userValidator } from "../../util/validator/UserValidator.js";
-import jwt from "jsonwebtoken";
+import passport from "passport";
 
 export default {
   Query: {
@@ -15,7 +15,7 @@ export default {
     },
   },
   Mutation: {
-    deleteUser: async (_, { id }) => {
+    deleteUser: async (_, { id }, context) => {
       try {
         const user = await User.findByIdAndDelete(id);
 
