@@ -6,6 +6,7 @@ import { BellIcon } from "react-native-heroicons/outline";
 const colorScheme = Appearance.getColorScheme();
 
 export default function index() {
+  console.log("aklım sana karışık mı gelir");
   return (
     <>
       <View className="w-full h-full flex flex-col items-center dark:bg-[#0b0e0f]">
@@ -14,7 +15,7 @@ export default function index() {
             className="font-bold text-3xl relative -left-12  dark:text-white "
             style={{ fontFamily: "SpaceMono" }}
           >
-            #Haziran
+            #Mango
           </Text>
           <BellIcon
             size={30}

@@ -7,7 +7,7 @@ import "../../auth/auth.js";
 
 const router = express.Router();
 
-router.get("/token", (req, res) => {
+router.get("/user", (req, res) => {
   if (req.user) {
     res.json({ user: req.user });
   }

@@ -1,4 +1,4 @@
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 
 export default function _layout() {
   return (

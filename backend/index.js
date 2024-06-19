@@ -61,11 +61,10 @@ const server = new ApolloServer({
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
 
-app.use(cors());
 // app.use(helmet());
+app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
-
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -80,6 +79,7 @@ app.use(passport.session());
 // });
 
 app.use("/", router);
+
 // app.use("/api", passport.authenticate("google", { session: true }));
 await server.start();
 

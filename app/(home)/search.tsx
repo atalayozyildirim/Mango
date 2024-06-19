@@ -8,7 +8,6 @@ export default function search() {
         placeholder="Kullanıcı veya post ara"
         className="w-80 p-2 border-2 border-black bg-white shadow-2xl rounded-2xl relative top-28 dark:border-white"
       />
-
       <View className="w-full h-full searchField flex mt-10 items-center"></View>
     </View>
   );

@@ -11,7 +11,7 @@ export default function addpost() {
   };
   return (
     <>
-      <Text className="text-3xl font-bold  w-full relative text-center top-20 dark:text-white ">
+      <Text className="text-3xl font-bold  w-full relative  top-64 ml-4 dark:text-white ">
         #Yeni Gönderi
       </Text>
       <View className="w-full h-full flex justify-center items-center dark:bg-[#0b0e0f]">

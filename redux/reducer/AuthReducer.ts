@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { login } from "../actions/AuthActions";
+import { loginProcsess } from "../actions/AuthActions";
 
 interface AuthState {
   user: any;
@@ -7,6 +7,11 @@ interface AuthState {
   isAuthenticated: boolean;
   loading: boolean;
   error: string | any;
+}
+
+interface LoginPayload {
+  user: any;
+  idToken: string;
 }
 
 const initialState: AuthState = {
@@ -20,19 +25,27 @@ const initialState: AuthState = {
 const AuthReducer = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    user: (state) => {
+      state.loading = true;
+      state.error = null;
+      state.isAuthenticated = false;
+      state.user = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(login.pending, (state) => {
+      .addCase(loginProcsess.pending, (state) => {
         state.loading = true;
       })
-      .addCase(login.fulfilled, (state, action) => {
+      .addCase(loginProcsess.fulfilled, (state, action) => {
+        const payload = action.payload as unknown as LoginPayload;
         state.loading = false;
         state.isAuthenticated = true;
-        state.user = action.payload.user;
-        state.token = action.payload.idToken;
+        state.user = payload.user;
+        state.token = payload.idToken;
       })
-      .addCase(login.rejected, (state, action) => {
+      .addCase(loginProcsess.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });

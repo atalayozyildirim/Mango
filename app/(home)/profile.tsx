@@ -1,6 +1,7 @@
 import { View, Text, Image, Appearance } from "react-native";
 import React from "react";
 import Posts from "@/components/Posts";
+import { PencilIcon } from "react-native-heroicons/outline";
 
 const colorScheme = Appearance.getColorScheme();
 
@@ -31,6 +32,14 @@ export default function profile(props: ProfileProps) {
             />
           </View>
         </View>
+        {
+          <PencilIcon
+            color="black"
+            className="dark:text-white dark:bg-white"
+            size={24}
+            style={{ position: "absolute", top: 50, right: 30 }}
+          />
+        }
         <View className="relative top-16 flex justify-center items-center w-full h-auto">
           <Text className="font-bold text-center text-2xl dark:text-white">
             {props.Name || "Atalay Özyıldırım"}
