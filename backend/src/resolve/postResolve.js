@@ -7,7 +7,8 @@ export default {
   Query: {
     posts: async () => {
       try {
-        return await PostModel.find({});
+        const data = await PostModel.find({}).limit(5);
+        return data;
       } catch (err) {
         console.log(err);
       }
@@ -50,9 +51,20 @@ export default {
   },
 
   Mutation: {
-    addPost: async (_, { body }, context) => {
+    addPost: async (
+      _,
+      { title, content, video, uri, image, authorName },
+      context
+    ) => {
       const user = context.user;
-
+      const body = {
+        title,
+        content,
+        video,
+        uri,
+        image,
+        authorName,
+      };
       const { error } = postValidator.validate(body);
       if (error) throw new GraphQLError(error.details[0].message);
 
@@ -61,16 +73,14 @@ export default {
           console.log(context);
           throw new GraphQLError("Unauthorized");
         }
-        body = body.trim();
-
-        if (body === "") {
-          throw new GraphQLError("Post body must not be empty");
-        }
-
         const newPost = new PostModel({
-          body,
-          user: user.name,
-          AuthorID: user.id,
+          title,
+          content,
+          video,
+          uri,
+          image,
+          user: authorName,
+          userId: user.id,
         });
 
         const post = await newPost.save();

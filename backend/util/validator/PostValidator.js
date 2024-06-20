@@ -6,6 +6,7 @@ const postValidator = Joi.object({
   image: Joi.string(),
   video: Joi.string(),
   uri: Joi.string(),
+  authorName: Joi.string(),
 });
 
 export { postValidator };

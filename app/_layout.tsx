@@ -11,7 +11,8 @@ import { useEffect, useContext } from "react";
 import "react-native-reanimated";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { ApolloProvider } from "@apollo/client";
+import { client } from "@/graphql/Client";
 import { Provider } from "react-redux";
 import store from "@/redux/store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -25,17 +26,13 @@ export default function RootLayout() {
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
-  const client = new ApolloClient({
-    uri: "http://localhost:5000/api",
-    cache: new InMemoryCache(),
-  });
-
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
       const bootstrapAsync = async () => {
         try {
           const token = await AsyncStorage.getItem("user");
+          console.log(token);
           if (token) {
             router.push("/home");
           } else {
@@ -54,8 +51,8 @@ export default function RootLayout() {
   }
 
   return (
-    <Provider store={store}>
-      <ApolloProvider client={client}>
+    <ApolloProvider client={client}>
+      <Provider store={store}>
         <GestureHandlerRootView>
           <ThemeProvider
             value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
@@ -69,7 +66,7 @@ export default function RootLayout() {
             </Stack>
           </ThemeProvider>
         </GestureHandlerRootView>
-      </ApolloProvider>
-    </Provider>
+      </Provider>
+    </ApolloProvider>
   );
 }
