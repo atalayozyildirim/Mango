@@ -16,6 +16,7 @@ import { client } from "@/graphql/Client";
 import { Provider } from "react-redux";
 import store from "@/redux/store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Config } from "@/config/config";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -31,8 +32,19 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
       const bootstrapAsync = async () => {
         try {
+          const fetchUserLogin = await fetch(Config.API_URL + "auth/user", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (!fetchUserLogin.ok) {
+            await AsyncStorage.removeItem("user");
+          }
+          const response = await fetchUserLogin.json();
+
           const token = await AsyncStorage.getItem("user");
-          console.log(token);
           if (token) {
             router.push("/home");
           } else {
@@ -62,6 +74,7 @@ export default function RootLayout() {
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
               <Stack.Screen name="(auth)" options={{ headerShown: false }} />
               <Stack.Screen name="(home)" options={{ headerShown: false }} />
+              <Stack.Screen name="(post)" options={{ headerShown: false }} />
               <Stack.Screen name="+not-found" />
             </Stack>
           </ThemeProvider>

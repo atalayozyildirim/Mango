@@ -3,9 +3,7 @@ import { View, Text, Image, StyleSheet, Appearance } from "react-native";
 import {
   HeartIcon,
   ChatBubbleOvalLeftIcon,
-  EllipsisHorizontalIcon,
 } from "react-native-heroicons/outline";
-
 interface PostProps {
   title: string;
   content: string;
@@ -49,13 +47,7 @@ export default function Posts(prop: PostProps) {
             }}
           />
           <Text style={styles.bold}>{prop.Author}</Text>
-          <View style={styles.renklensingecelerimiz}>
-            <EllipsisHorizontalIcon
-              width={24}
-              height={24}
-              color={colorScheme === "dark" ? "white" : "black"}
-            />
-          </View>
+          <View style={styles.renklensingecelerimiz}></View>
         </View>
         <View style={styles.content}>
           <Text style={styles.gozlerimela}>{prop.content}</Text>
@@ -133,7 +125,7 @@ const styles = StyleSheet.create({
     display: "flex",
     width: "100%",
     justifyContent: "flex-end",
-    position: "relative",
-    right: -252,
+    position: "static",
+    right: 2300,
   },
 });

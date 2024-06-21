@@ -16,13 +16,12 @@ export default {
     async getPost(_, { postId }) {
       return await PostModel.findById(postId);
     },
-    paginationPosts: async (_, { page, limit }) => {
+    paginatePosts: async (_, { page, limit }) => {
       try {
         const posts = await PostModel.find({})
           .skip((page - 1) * limit)
           .limit(limit)
           .sort({ createdAt: -1 });
-
         return posts;
       } catch (err) {
         throw new GraphQLError(err);
@@ -79,6 +78,7 @@ export default {
           video,
           uri,
           image,
+          authorName,
           user: authorName,
           userId: user.id,
         });

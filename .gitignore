@@ -3,6 +3,7 @@ node_modules/
 dist/
 /backend/node_modules/
 /backend/.env
+/%ProgramData%
 npm-debug.*
 *.jks
 *.p8

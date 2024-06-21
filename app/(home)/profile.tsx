@@ -1,4 +1,5 @@
 import { View, Text, Image, Appearance } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 import Posts from "@/components/Posts";
 import { PencilIcon } from "react-native-heroicons/outline";
@@ -14,14 +15,28 @@ interface ProfileProps {
   content: string;
 }
 
-export default function profile(props: ProfileProps) {
+export default function profile() {
+  const [data, setData] = React.useState<any>(null);
+
+  React.useEffect(() => {
+    const userData = async () => {
+      try {
+        const value = (await AsyncStorage.getItem("user")) ?? "";
+        setData(JSON.parse(value));
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    userData();
+    console.log(data.user.name);
+  }, [data]);
   return (
     <View className="w-full h-full justify-center items-center dark:bg-[#0b0e0f]">
       <View className="w-full h-full ">
         <View className="bg-amber-200 w-full h-48  relative  rounded-b-3xl">
           <View className="flex justify-center items-center absolute  w-full h-full -bottom-24">
             <Image
-              source={{ uri: props.image || "https://picsum.photos/200/300" }}
+              source={{ uri: "" || "https://picsum.photos/200/300" }}
               style={{
                 width: 80,
                 height: 80,
@@ -42,30 +57,30 @@ export default function profile(props: ProfileProps) {
         }
         <View className="relative top-16 flex justify-center items-center w-full h-auto">
           <Text className="font-bold text-center text-2xl dark:text-white">
-            {props.Name || "Atalay Özyıldırım"}
+            {/* { || "Null"} */}
           </Text>
         </View>
 
         <View className="w-full h-20 bg-white shadow-2xl rounded-2xl relative top-24 flex container dark:bg-[#191b1f]  items-center p-4">
           <View className="flex w-full flex-row items-center relative top-4 -left-4  gap-8">
             <Text className="font-bold dark:text-white">
-              {props.job || "Meslek girilmemiş"}
+              {/* {|| "Meslek girilmemiş"} */}
             </Text>
             <Text className="font-bold dark:text-white">
-              {props.age || "Yaş girilmemiş"}
+              {/* {|| "Yaş girilmemiş"} */}
             </Text>
             <Text className="font-bold dark:text-white">
-              {props.city || "Şehir girilmemiş"}
+              {/* { || "Şehir girilmemiş"} */}
             </Text>
           </View>
         </View>
         <View className="w-cull h-36 bg-white dark:bg-[#191b1f] shadow-2xl rounded-2xl relative top-24 mt-5 flex  p-5  ">
           <View className="flex flex-row justify-start items-center relative ml-2  flex-grow">
             <Text className="flex flex-grow-1 text dark:text-white ">
-              {props.content && props.content.length > 350
+              {/* {props.content && props.content.length > 350
                 ? props.content.slice(0, 350)
                 : props.content ||
-                  "ELA GÖZLERİM ELA GÖZLERİM ELAAAAA YALAN SÖLEEM GÖZLERİM ELA"}
+                  "ELA GÖZLERİM ELA GÖZLERİM ELAAAAA YALAN SÖLEEM GÖZLERİM ELA"} */}
             </Text>
           </View>
         </View>

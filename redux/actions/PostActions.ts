@@ -8,21 +8,22 @@ export const getPosts: any | void = createAsyncThunk(
     const GET_POSTS = gql`
       query {
         posts {
-          content
           title
+          authorName
+          content
+          uri
+          video
         }
       }
-    `;
-
+    `; // GraphQL query to get all post
     const response = await client.query({
       query: GET_POSTS,
     });
-    console.log(response.data.posts);
-    return response.data.posts;
+    return response.data;
   }
 );
 
-export const createPost: any | void = createAsyncThunk(
+export const createPost = createAsyncThunk(
   "post/createPost",
   async (data: any) => {
     const CREATE_POST = gql`
@@ -45,23 +46,57 @@ export const createPost: any | void = createAsyncThunk(
           title
           content
           authorName
+          likes
+          comments
         }
       }
     `;
 
-    const response = await client.mutate({
-      mutation: CREATE_POST,
-      variables: {
-        title: data.title,
-        authorName: data.authorName,
-        content: data.content,
-        video: data.video || "",
-        uri: data.uri || "",
-        image: data.image || [],
-        date: data.date,
-      },
-    });
+    try {
+      const response = await client.mutate({
+        mutation: CREATE_POST,
+        variables: {
+          title: data.title,
+          content: data.content,
+          authorName: data.authorName,
+          video: data.video || "",
+          uri: data.uri || "",
+          image: data.image || "",
+          date: data.date,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+      return "ERROR ";
+    }
+  }
+);
 
-    return response.data;
+export const GetPostsWithPagination = createAsyncThunk(
+  "post/GetPost",
+  async (data: any) => {
+    const GET_POSTS = gql`
+      query Query($page: Int!, $limit: Int!) {
+        paginatePosts(page: $page, limit: $limit) {
+          content
+          authorName
+        }
+      }
+    `;
+    try {
+      const response = await client.query({
+        query: GET_POSTS,
+        variables: {
+          page: data.page,
+          limit: data.limit,
+        },
+      });
+      return {
+        response: response.data,
+        loading: response.loading,
+      };
+    } catch (error) {
+      return "ERROR";
+    }
   }
 );

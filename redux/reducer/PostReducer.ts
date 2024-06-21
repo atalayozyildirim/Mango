@@ -2,13 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 import { getPosts } from "@/redux/actions/PostActions";
 
 interface PostState {
-  posts: string[];
+  data: string[];
   loading: boolean;
   error: string | any | null;
 }
 
 const initialState: PostState = {
-  posts: [],
+  data: [],
   loading: false,
   error: null,
 };
@@ -21,15 +21,15 @@ const postReducer = createSlice({
     builder.addCase(getPosts.pending, (state) => {
       state.loading = true;
       state.error = null;
-      state.posts = [];
+      state.data = [];
     });
     builder.addCase(getPosts.fulfilled, (state, action) => {
       state.loading = false;
-      state.posts = action.payload;
+      state.data = action.payload;
     });
     builder.addCase(getPosts.rejected, (state, action) => {
       state.loading = false;
-      state.posts = [];
+      state.data = [];
       state.error = action.error.message;
     });
   },

@@ -1,31 +1,36 @@
-import { View, Text, ScrollView, Appearance } from "react-native";
+import { View, Text, ScrollView, Appearance, FlatList } from "react-native";
 import React from "react";
 import Posts from "@/components/Posts";
 import { BellIcon } from "react-native-heroicons/outline";
+import { getPosts, GetPostsWithPagination } from "@/redux/actions/PostActions";
 import { useDispatch, useSelector } from "react-redux";
-import { getPosts } from "@/redux/actions/PostActions";
 
 const colorScheme = Appearance.getColorScheme();
 
 export default function index() {
-  const [loading, setLoading] = React.useState<boolean>(false);
-
-  const post = useSelector((state: any) => state.post);
-
   const dispatch = useDispatch();
 
+  const [page, setPage] = React.useState(1);
+  const [limit, setLimit] = React.useState(10);
+
+  const post = useSelector(
+    (state: any) => state.paginationPosts.posts.response.paginatePosts
+  );
+
+  console.log(post);
   React.useEffect(() => {
-    setLoading(true);
-    dispatch(getPosts());
-    console.log(JSON.stringify(post) + "REQUEST");
-    return () => {
-      setLoading(false);
-    };
-  }, [loading]);
+    dispatch<any>(GetPostsWithPagination({ page, limit }));
+    console.log(post);
+  }, []);
+
+  const handleLoadMore = () => {
+    setPage(page + 1);
+  };
+
   return (
     <>
       <View className="w-full h-full flex flex-col items-center dark:bg-[#0b0e0f]">
-        <View className="w-5/6 relative top-16 left-6 flex flex-row justify-between">
+        <View className="w-5/6 relative top-14 left-6 flex flex-row justify-between">
           <Text
             className="font-bold text-3xl relative -left-12  dark:text-white "
             style={{ fontFamily: "SpaceMono" }}
@@ -38,30 +43,25 @@ export default function index() {
           />
         </View>
         <View className="w-full h-full flex flex-col  items-center relative top-20">
-          <ScrollView className="w-full h-full  relative  ">
-            {post && post.length > 0 ? (
-              post.map((item: any) => {
-                return (
-                  <Posts
-                    title={item.title}
-                    content={item.content}
-                    date={item.date}
-                    Author={item.authorName}
-                    LikeCount={item.LikeCount}
-                    AuthorImage={item.authorImage}
-                    className="shadow-2xl dark:bg-[#191b1f]"
-                  />
-                );
-              })
-            ) : (
-              <Text className="text-black text-center ">
-                Başka post yok ...
-              </Text>
+          <FlatList
+            data={post}
+            keyExtractor={(item) => item.id}
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.5}
+            renderItem={({ item, index }) => (
+              <Posts
+                key={item.id}
+                title={item.title}
+                content={item.content}
+                date={item.date}
+                Author={item.authorName}
+                LikeCount={item.likeCount}
+                AuthorImage={item.authorImage}
+                className="shadow-2xl dark:bg-[#191b1f]"
+              />
             )}
-            <View className="w-full h-[30vh] text-center"></View>
-          </ScrollView>
+          />
         </View>
-        {/* <Posts /> */}
       </View>
     </>
   );
