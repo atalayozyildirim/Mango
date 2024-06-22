@@ -20,7 +20,6 @@ export default function index() {
   console.log(post);
   React.useEffect(() => {
     dispatch<any>(GetPostsWithPagination({ page, limit }));
-    console.log(post);
   }, []);
 
   const handleLoadMore = () => {
@@ -45,12 +44,12 @@ export default function index() {
         <View className="w-full h-full flex flex-col  items-center relative top-20">
           <FlatList
             data={post}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.id} // Assuming 'id' is a string, use the appropriate property for your data
             onEndReached={handleLoadMore}
             onEndReachedThreshold={0.5}
-            renderItem={({ item, index }) => (
+            renderItem={({ item }) => (
               <Posts
-                key={index}
+                key={item.id}
                 title={item.title}
                 content={item.content}
                 date={item.date}

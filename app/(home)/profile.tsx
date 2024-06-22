@@ -4,14 +4,16 @@ import React from "react";
 import Posts from "@/components/Posts";
 import { PencilSquareIcon } from "react-native-heroicons/outline";
 import { ScrollView } from "react-native-gesture-handler";
+import { useDispatch, useSelector } from "react-redux";
+import { GetPostById } from "@/redux/actions/PostActions";
 
 const colorScheme = Appearance.getColorScheme();
 
 export default function profile() {
   const [data, setData] = React.useState<any>(null);
-  const [myPosts, setMyPosts] = React.useState<any>([]);
-
-  React.useEffect(() => {});
+  const [postData, setPostData] = React.useState<any>([]);
+  const dispatch: any = useDispatch();
+  const Post = useSelector((state: any) => state?.GetPostById);
 
   React.useEffect(() => {
     const userData = async () => {
@@ -20,7 +22,6 @@ export default function profile() {
         if (value !== null) {
           const parsedValue = JSON.parse(value);
           setData(parsedValue);
-          console.warn(parsedValue);
         }
       } catch (e) {
         console.log(e);
@@ -29,6 +30,21 @@ export default function profile() {
     userData();
     console.log(data);
   }, []);
+
+  React.useEffect(() => {
+    data?.user?.Posts?.map((post: any) => {
+      dispatch(GetPostById(post));
+      setPostData((prevD: any) => [...prevD, Post]);
+    });
+  }, [data?.user?.Posts]);
+
+  React.useEffect(() => {
+    if (Post.length > 0) {
+      setPostData((prevState: any) => [...prevState, ...Post]);
+    }
+  }, [Post]);
+
+  React.useEffect(() => {}, [postData]);
   return (
     <>
       <ScrollView>
@@ -62,26 +78,27 @@ export default function profile() {
             Message
           </Text>
         </View>
-        <Text className="text-xl font-bold mt-6 ml-4 dark:text-white">
+        <Text className="text-xl h-10 font-bold mt-6 ml-4 dark:text-white">
           Posts
         </Text>
-        {/* {data?.user?.Posts?.length > 0 ? (
-          data.user.posts.map((post: any, index: number) => (
+        {postData?.length > 0 ? (
+          postData.map((post: any, index: number) => (
             <Posts
               key={index}
-              title={post.title}
-              content={post.content}
-              image={post.image}
-              date={post.date}
-              Author={post.Author}
-              LikeCount={post.LikeCount}
-              AuthorImage={post.AuthorImage}
-              className={post.className}
+              Author={post?.posts?.post.authorName}
+              content={post?.posts?.post.content}
+              image={post?.posts?.post.image}
+              title={post?.posts?.post.title}
+              date={post?.posts?.post.date}
+              LikeCount={post?.posts?.post.LikeCount}
+              AuthorImage={post?.posts?.post.AuthorImage}
+              className={post?.posts?.post.className}
+              id={""}
             />
           ))
         ) : (
-          <Text className="ml-4">Görününrde birşey yok</Text>
-        )} */}
+          <Text className="text-center mt-6 dark:text-white">Gönderi yok</Text>
+        )}
       </ScrollView>
     </>
   );

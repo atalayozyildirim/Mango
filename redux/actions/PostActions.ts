@@ -102,3 +102,32 @@ export const GetPostsWithPagination = createAsyncThunk(
     }
   }
 );
+
+export const GetPostById = createAsyncThunk(
+  "post/GetPostById",
+  async (id: string) => {
+    const GET_POST_BY_ID = gql`
+      query Post($postId: ID!) {
+        post(id: $postId) {
+          content
+          authorName
+          id
+          image
+          uri
+          video
+        }
+      }
+    `;
+    try {
+      const response = await client.query({
+        query: GET_POST_BY_ID,
+        variables: {
+          postId: id,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      return JSON.stringify(error);
+    }
+  }
+);

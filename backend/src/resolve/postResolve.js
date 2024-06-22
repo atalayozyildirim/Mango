@@ -14,8 +14,13 @@ export default {
         console.log(err);
       }
     },
-    async getPost(_, { postId }) {
-      return await PostModel.findById(postId);
+    post: async (_, { id }) => {
+      try {
+        const data = await PostModel.findById(id);
+        return data;
+      } catch (err) {
+        throw new GraphQLError(err);
+      }
     },
     paginatePosts: async (_, { page, limit }) => {
       try {

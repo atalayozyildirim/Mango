@@ -1,14 +1,24 @@
+import { router } from "expo-router";
 import React, { useState } from "react";
-import { View, Text, Image, StyleSheet, Appearance } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Appearance,
+  TouchableOpacity,
+} from "react-native";
 import {
   HeartIcon,
   ChatBubbleOvalLeftIcon,
 } from "react-native-heroicons/outline";
+
 interface PostProps {
   title: string;
   content: string;
   date: string;
   Author: string;
+  id: any;
   LikeCount: number;
   AuthorImage: String;
   className: string;
@@ -31,21 +41,27 @@ export default function Posts(prop: PostProps) {
       prevIndex === 0 ? (prop.image?.length || 0) - 1 : prevIndex - 1
     );
   };
-
   return (
     <>
       <View style={styles.container} className={prop.className}>
         <View style={styles.top}>
-          <Image
-            source={{ uri: "https://picsum.photos/200/300" }}
-            style={{
-              width: 50,
-              height: 50,
-              resizeMode: "cover",
-              borderRadius: 50,
-              marginRight: 10,
+          <TouchableOpacity
+            onPress={() => {
+              router.setParams({ id: prop.id });
+              router.push("/profile");
             }}
-          />
+          >
+            <Image
+              source={{ uri: "https://picsum.photos/200/300" }}
+              style={{
+                width: 50,
+                height: 50,
+                resizeMode: "cover",
+                borderRadius: 50,
+                marginRight: 10,
+              }}
+            />
+          </TouchableOpacity>
           <Text style={styles.bold}>{prop.Author}</Text>
           <View style={styles.renklensingecelerimiz}></View>
         </View>
