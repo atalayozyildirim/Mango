@@ -1,5 +1,12 @@
 import React from "react";
-import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  Appearance,
+} from "react-native";
 import { Link, router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Config } from "@/config/config";
@@ -9,6 +16,8 @@ const login: React.FC = () => {
   const [Password, setPassword] = React.useState("");
   const [error, setError] = React.useState({ false: false, message: "" });
   const [disable, setDisabled] = React.useState(false);
+
+  const colorS = Appearance.getColorScheme();
 
   const onLogin = async () => {
     const Login = await fetch(Config.API_URL + "auth/login", {
@@ -45,7 +54,7 @@ const login: React.FC = () => {
           placeholder="Email"
           keyboardType="email-address"
           className="p-2 m-2 bg-white w-[35vh]  focus:border-2 focus:border-black   dark:bg-[#191b1f] rounded-md"
-          placeholderTextColor="#000"
+          placeholderTextColor={colorS === "dark" ? "#fff" : "#000"}
           onChange={(e) => {
             setEmail(e.nativeEvent.text);
           }}
@@ -54,7 +63,7 @@ const login: React.FC = () => {
           placeholder="Password"
           secureTextEntry={true}
           className="w-[35vh] p-2 m-2 bg-white  focus:border-2 focus:border-black dark:bg-[#191b1f] rounded-md"
-          placeholderTextColor="#000"
+          placeholderTextColor={colorS === "dark" ? "#fff" : "#000"}
           onChange={(e) => {
             setPassword(e.nativeEvent.text);
           }}

@@ -1,106 +1,88 @@
-import { View, Text, Image, Appearance } from "react-native";
+import { View, Text, Image, Appearance, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 import Posts from "@/components/Posts";
-import { PencilIcon } from "react-native-heroicons/outline";
+import { PencilSquareIcon } from "react-native-heroicons/outline";
+import { ScrollView } from "react-native-gesture-handler";
 
 const colorScheme = Appearance.getColorScheme();
 
-interface ProfileProps {
-  Name: string;
-  image: string;
-  job: string;
-  age: number;
-  city: string;
-  content: string;
-}
-
 export default function profile() {
   const [data, setData] = React.useState<any>(null);
+  const [myPosts, setMyPosts] = React.useState<any>([]);
+
+  React.useEffect(() => {});
 
   React.useEffect(() => {
     const userData = async () => {
       try {
-        const value = (await AsyncStorage.getItem("user")) ?? "";
-        setData(JSON.parse(value));
+        const value: any = await AsyncStorage.getItem("user");
+        if (value !== null) {
+          const parsedValue = JSON.parse(value);
+          setData(parsedValue);
+          console.warn(parsedValue);
+        }
       } catch (e) {
         console.log(e);
       }
     };
     userData();
-    console.log(data.user.name);
-  }, [data]);
+    console.log(data);
+  }, []);
   return (
-    <View className="w-full h-full justify-center items-center dark:bg-[#0b0e0f]">
-      <View className="w-full h-full ">
-        <View className="bg-amber-200 w-full h-48  relative  rounded-b-3xl">
-          <View className="flex justify-center items-center absolute  w-full h-full -bottom-24">
-            <Image
-              source={{ uri: "" || "https://picsum.photos/200/300" }}
-              style={{
-                width: 80,
-                height: 80,
-                resizeMode: "cover",
-                borderRadius: 50,
-                marginRight: 10,
-              }}
-            />
-          </View>
-        </View>
-        {
-          <PencilIcon
-            color="black"
-            className="dark:text-white dark:bg-white"
-            size={24}
-            style={{ position: "absolute", top: 50, right: 30 }}
+    <>
+      <ScrollView>
+        <View className="w-full h-[6vh] "></View>
+        <PencilSquareIcon
+          size={25}
+          color="black"
+          style={{ position: "absolute", right: 15, top: 50 }}
+        />
+        <View className="w-full h-36 flex flex-col justify-center items-center ">
+          <Image
+            source={require("../../assets/images/avatar.png")}
+            style={{ width: 85, height: 85, borderRadius: 50 }}
           />
-        }
-        <View className="relative top-16 flex justify-center items-center w-full h-auto">
-          <Text className="font-bold text-center text-2xl dark:text-white">
-            {/* { || "Null"} */}
+          <Text className="text-3xl font-bold dark:text-white mt-3">
+            {data?.user?.name}
           </Text>
         </View>
-
-        <View className="w-full h-20 bg-white shadow-2xl rounded-2xl relative top-24 flex container dark:bg-[#191b1f]  items-center p-4">
-          <View className="flex w-full flex-row items-center relative top-4 -left-4  gap-8">
-            <Text className="font-bold dark:text-white">
-              {/* {|| "Meslek girilmemiş"} */}
-            </Text>
-            <Text className="font-bold dark:text-white">
-              {/* {|| "Yaş girilmemiş"} */}
-            </Text>
-            <Text className="font-bold dark:text-white">
-              {/* { || "Şehir girilmemiş"} */}
-            </Text>
-          </View>
+        <View className="w-full h-14 flex flex-row justify-center items-center dark:text-white ">
+          <Text className="text-xl  grow- dark:text-white">
+            {data?.user?.content?.length > 350
+              ? data?.user?.content.slice(0, 350)
+              : data?.user?.content || "Hmmmmm ..."}
+          </Text>
         </View>
-        <View className="w-cull h-36 bg-white dark:bg-[#191b1f] shadow-2xl rounded-2xl relative top-24 mt-5 flex  p-5  ">
-          <View className="flex flex-row justify-start items-center relative ml-2  flex-grow">
-            <Text className="flex flex-grow-1 text dark:text-white ">
-              {/* {props.content && props.content.length > 350
-                ? props.content.slice(0, 350)
-                : props.content ||
-                  "ELA GÖZLERİM ELA GÖZLERİM ELAAAAA YALAN SÖLEEM GÖZLERİM ELA"} */}
-            </Text>
-          </View>
+        <View className="w-full  flex flex-row justify-center items-center gap-2 mt-6 relative">
+          <Text className="w-40 rounded-xl p-3 bg-sky-100 border-2 text-center border-black font-bold text-md">
+            ne işe yarıcak
+          </Text>
+          <Text className="w-40 rounded-xl p-3 bg-amber-100 border-2 text-center border-black font-bold text-md">
+            Message
+          </Text>
         </View>
-        {/* if user not authorized show the posts x user  */}
-        {/* <Text className="flex justify-start relative top-28 ml-1 text-2xl font-bold">
-          #Post
+        <Text className="text-xl font-bold mt-6 ml-4 dark:text-white">
+          Posts
         </Text>
-        <View className="w-full bg-white  flex justify-start relative rounded-2xl top-28  top">
-          <Posts
-            title="Hello World"
-            content="YAZ GELDİ LAN YAZ GÖZLERİM ELAAA GÖZLERİM ELAAAA "
-            date="2024-06-05"
-            image="https://picsum.photos/200/300"
-            Author="Atalay"
-            LikeCount={10}
-            AuthorImage="https://picsum.photos/200/300"
-            className="shadow-2xl "
-          />
-        </View> */}
-      </View>
-    </View>
+        {/* {data?.user?.Posts?.length > 0 ? (
+          data.user.posts.map((post: any, index: number) => (
+            <Posts
+              key={index}
+              title={post.title}
+              content={post.content}
+              image={post.image}
+              date={post.date}
+              Author={post.Author}
+              LikeCount={post.LikeCount}
+              AuthorImage={post.AuthorImage}
+              className={post.className}
+            />
+          ))
+        ) : (
+          <Text className="ml-4">Görününrde birşey yok</Text>
+        )} */}
+      </ScrollView>
+    </>
   );
 }

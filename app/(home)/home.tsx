@@ -14,7 +14,7 @@ export default function index() {
   const [limit, setLimit] = React.useState(10);
 
   const post = useSelector(
-    (state: any) => state.paginationPosts.posts.response.paginatePosts
+    (state: any) => state.paginationPosts.posts.response?.paginatePosts
   );
 
   console.log(post);
@@ -50,7 +50,7 @@ export default function index() {
             onEndReachedThreshold={0.5}
             renderItem={({ item, index }) => (
               <Posts
-                key={item.id}
+                key={index}
                 title={item.title}
                 content={item.content}
                 date={item.date}

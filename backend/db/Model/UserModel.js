@@ -8,6 +8,11 @@ const UserSchema = new mongoose.Schema({
     type: String,
     unique: true,
   },
+  ProfileContent: {
+    type: String,
+    maxLength: 300,
+  },
+  isMe: Boolean,
   email: {
     type: String,
     unique: true,

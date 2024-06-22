@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { gql } from "@apollo/client";
 import { client } from "@/graphql/Client";
+import UserModel from "../../backend/db/Model/PostModel";
 
 export const getPosts: any | void = createAsyncThunk(
   "post/getPosts",
@@ -65,6 +66,7 @@ export const createPost = createAsyncThunk(
           date: data.date,
         },
       });
+      return response.data;
     } catch (error) {
       console.error(error);
       return "ERROR ";

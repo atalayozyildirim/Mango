@@ -2,6 +2,7 @@ import { GraphQLError } from "graphql";
 import PostModel from "../../db/Model/PostModel.js";
 import LikeModel from "../../db/Model/LikeModel.js";
 import { postValidator } from "../../util/validator/PostValidator.js";
+import UserModel from "../../db/Model/UserModel.js";
 
 export default {
   Query: {
@@ -84,6 +85,14 @@ export default {
         });
 
         const post = await newPost.save();
+
+        const userHePostFieldUpdate = await UserModel.findOneAndUpdate(
+          { _id: user.id },
+          { $push: { Posts: post._id } },
+          { new: true }
+        );
+        console.log(userHePostFieldUpdate);
+
         return post;
       } catch (err) {
         throw new GraphQLError(err);
