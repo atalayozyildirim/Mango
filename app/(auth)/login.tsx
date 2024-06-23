@@ -53,7 +53,7 @@ const login: React.FC = () => {
         <TextInput
           placeholder="Email"
           keyboardType="email-address"
-          className="p-2 m-2 bg-white w-[35vh]  focus:border-2 focus:border-black   dark:bg-[#191b1f] rounded-md"
+          className="p-2 m-2 bg-white w-[35vh]  focus:border-2 focus:border-black dark:text-white  dark:bg-[#191b1f] rounded-md"
           placeholderTextColor={colorS === "dark" ? "#fff" : "#000"}
           onChange={(e) => {
             setEmail(e.nativeEvent.text);
@@ -62,7 +62,7 @@ const login: React.FC = () => {
         <TextInput
           placeholder="Password"
           secureTextEntry={true}
-          className="w-[35vh] p-2 m-2 bg-white  focus:border-2 focus:border-black dark:bg-[#191b1f] rounded-md"
+          className="w-[35vh] p-2 m-2 bg-white  focus:border-2 focus:border-black dark:text-white dark:bg-[#191b1f] rounded-md"
           placeholderTextColor={colorS === "dark" ? "#fff" : "#000"}
           onChange={(e) => {
             setPassword(e.nativeEvent.text);

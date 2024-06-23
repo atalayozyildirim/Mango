@@ -47,6 +47,7 @@ type Post {
   content: String!
   authorName: String
   AuthorID: String!
+  userId: String
   uri: String
   video: [String]
   image: [String]

@@ -18,12 +18,14 @@ const colorScheme = Appearance.getColorScheme();
 
 export default function addpost() {
   const [data, setdata] = React.useState({
+    title: "default",
     content: "",
-    uri: "",
-    image: [],
+    uri: "[]",
+    image: "[]",
+    video: "[]",
     authorName: "",
   });
-  const [image, setImage] = React.useState<any>(null);
+  const [image, setImage] = React.useState<string | null>(null);
   const dispacth = useDispatch();
 
   const pickImage = async () => {
@@ -40,20 +42,18 @@ export default function addpost() {
   };
   const addPost = async () => {
     try {
-      await dispacth<any>(createPost({ data }));
+      await dispacth<any>(createPost({ ...data }));
+      await router.push("/home");
     } catch (error) {
       console.log(error);
     }
   };
-
   React.useEffect(() => {
-    const fetchData = async () => {
-      const userName = await getUserName();
-      const parse: any = JSON.parse(userName!);
-      setdata({ ...data, authorName: parse.user.name });
-    };
-    fetchData();
+    getUserName().then((res) => {
+      setdata({ ...data, authorName: res ?? "" });
+    });
   }, []);
+
   return (
     <>
       <Text className="text-3xl font-bold  w-full relative  top-64 ml-4 dark:text-white ">
@@ -64,7 +64,7 @@ export default function addpost() {
           placeholder="Bir şey yaz"
           multiline={true}
           maxLength={500}
-          className="border-b-2 border-black bg-white  p-2 w-full h-[20vh] dark:bg-[#191b1f]"
+          className="border-b-2 border-black bg-white  p-2 w-full h-[20vh] dark:bg-[#191b1f] dark:text-white"
           placeholderTextColor={colorScheme === "dark" ? "white" : "black"}
           onChangeText={(text) => {
             if (image !== null) {
