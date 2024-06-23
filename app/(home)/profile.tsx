@@ -28,13 +28,13 @@ export default function profile() {
       }
     };
     userData();
-    console.log(data);
   }, []);
 
   React.useEffect(() => {
     data?.user?.Posts?.map((post: any) => {
-      dispatch(GetPostById(post));
-      setPostData((prevD: any) => [...prevD, Post]);
+      // dispatch(GetPostById(post));
+      // setPostData((prevD: any) => [post]);
+      console.log(post);
     });
   }, [data?.user?.Posts]);
 
@@ -85,14 +85,14 @@ export default function profile() {
           postData.map((post: any, index: number) => (
             <Posts
               key={index}
-              Author={post?.posts?.post.authorName}
-              content={post?.posts?.post.content}
-              image={post?.posts?.post.image}
-              title={post?.posts?.post.title}
-              date={post?.posts?.post.date}
-              LikeCount={post?.posts?.post.LikeCount}
-              AuthorImage={post?.posts?.post.AuthorImage}
-              className={post?.posts?.post.className}
+              Author={post?.posts?.post?.authorName}
+              content={post?.posts?.post?.content}
+              image={post?.posts?.post?.image}
+              title={post?.posts?.post?.title}
+              date={post?.posts?.post?.date}
+              LikeCount={post?.posts?.post?.LikeCount}
+              AuthorImage={post?.posts?.post?.AuthorImage}
+              className={post?.posts?.post?.className}
               id={""}
             />
           ))

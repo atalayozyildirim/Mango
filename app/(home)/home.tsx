@@ -1,31 +1,45 @@
-import { View, Text, ScrollView, Appearance, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  Appearance,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
 import React from "react";
 import Posts from "@/components/Posts";
 import { BellIcon } from "react-native-heroicons/outline";
 import { getPosts, GetPostsWithPagination } from "@/redux/actions/PostActions";
 import { useDispatch, useSelector } from "react-redux";
+import PaginationPosts from "@/redux/reducer/PaginationPosts";
 
 const colorScheme = Appearance.getColorScheme();
 
 export default function index() {
   const dispatch = useDispatch();
 
+  const [data, setData] = React.useState<any>([]);
   const [page, setPage] = React.useState(1);
-  const [limit, setLimit] = React.useState(10);
+  const [limit, setLimit] = React.useState(6);
 
   const post = useSelector(
     (state: any) => state.paginationPosts.posts.response?.paginatePosts
   );
-
-  console.log(post);
   React.useEffect(() => {
+    // Sayfa numarası veya limit değiştiğinde yeni verileri çek
     dispatch<any>(GetPostsWithPagination({ page, limit }));
-  }, []);
+  }, [page, limit]); // post'u bağımlılıklardan çıkar
+
+  React.useEffect(() => {
+    // post güncellendiğinde, mevcut verilere ekle
+    if (post && post.length > 0) {
+      setData((prev: any) => [...prev, ...post]);
+    }
+  }, [post]); // post değişikliklerini dinle
 
   const handleLoadMore = () => {
-    setPage(page + 1);
+    setPage(page + 1); // Sayfa numarasını artır
   };
-
   return (
     <>
       <View className="w-full h-full flex flex-col items-center dark:bg-[#0b0e0f]">
@@ -43,16 +57,17 @@ export default function index() {
         </View>
         <View className="w-full h-full flex flex-col  items-center relative top-20">
           <FlatList
-            data={post}
-            keyExtractor={(item) => item.id} // Assuming 'id' is a string, use the appropriate property for your data
+            data={data}
+            keyExtractor={(item) => item.id}
             onEndReached={handleLoadMore}
-            onEndReachedThreshold={0.5}
+            onEndReachedThreshold={0.8}
             renderItem={({ item }) => (
               <Posts
                 key={item.id}
                 title={item.title}
                 content={item.content}
                 date={item.date}
+                id={item.userId}
                 Author={item.authorName}
                 LikeCount={item.likeCount}
                 AuthorImage={item.authorImage}

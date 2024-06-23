@@ -75,7 +75,6 @@ export default {
 
       try {
         if (!user) {
-          console.log(context);
           throw new GraphQLError("Unauthorized");
         }
         const newPost = new PostModel({
@@ -96,8 +95,6 @@ export default {
           { $push: { Posts: post._id } },
           { new: true }
         );
-        console.log(userHePostFieldUpdate);
-
         return post;
       } catch (err) {
         throw new GraphQLError(err);

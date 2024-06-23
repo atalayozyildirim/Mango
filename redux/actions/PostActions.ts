@@ -28,27 +28,26 @@ export const createPost = createAsyncThunk(
   "post/createPost",
   async (data: any) => {
     const CREATE_POST = gql`
-      mutation Mutation(
+      mutation AddPost(
         $title: String!
         $content: String!
+        $authorName: String!
         $video: String
         $uri: String
         $image: String
-        $date: String
       ) {
         addPost(
           title: $title
           content: $content
+          authorName: $authorName
           video: $video
           uri: $uri
           image: $image
-          date: $date
         ) {
-          title
           content
+          title
           authorName
-          likes
-          comments
+          id
         }
       }
     `;
@@ -63,7 +62,6 @@ export const createPost = createAsyncThunk(
           video: data.video || "",
           uri: data.uri || "",
           image: data.image || "",
-          date: data.date,
         },
       });
       return response.data;
@@ -82,6 +80,7 @@ export const GetPostsWithPagination = createAsyncThunk(
         paginatePosts(page: $page, limit: $limit) {
           content
           authorName
+          userId
         }
       }
     `;
